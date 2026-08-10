@@ -63,9 +63,16 @@ public class CategoriesController(ArcaneVaultDbContext db, ApiTokenService token
     public async Task<IActionResult> Delete(string code)
     {
         if (RequireStaff() is { } denied) return denied;
-        var category = await db.Categories.Include(x => x.CollectionItemCategories).SingleOrDefaultAsync(x => x.CategoryCode == code);
+        var category = await db.Categories
+            .Include(x => x.CollectionItemCategories).ThenInclude(x => x.Item)
+            .SingleOrDefaultAsync(x => x.CategoryCode == code);
         if (category is null) return NotFound();
-        if (category.CollectionItemCategories.Any()) return Conflict(new { message = "This category is used by collection items and cannot be deleted." });
+        if (category.CollectionItemCategories.Any(x => x.Item is { IsDeleted: false }))
+            return Conflict(new { message = "This category is used by active collection items and cannot be deleted." });
+
+        // Historical links to soft-deleted items should not prevent removal of an
+        // otherwise unused category, but they must be removed before the category.
+        db.RemoveRange(category.CollectionItemCategories);
         db.Remove(category); await db.SaveChangesAsync(); return NoContent();
     }
 }
