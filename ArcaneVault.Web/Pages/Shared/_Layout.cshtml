@@ -1,0 +1,63 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · Arcane Vault</title>
+    <link rel="icon" type="image/webp" href="~/images/arcane-vault-mark.webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/refinements.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="announcement">Built for collectors. Designed for clarity.</div>
+    <header class="site-header">
+        <a class="wordmark" asp-page="/Index" aria-label="Arcane Vault home">
+            <img class="brand-logo" src="~/images/arcane-vault-logo.webp" alt="Arcane Vault" />
+        </a>
+        <button class="menu-button" type="button" aria-label="Toggle navigation" data-menu-button>Menu</button>
+        <nav class="main-nav" data-menu>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                @if (User.IsInRole("Staff"))
+                {
+                    <a asp-page="/Collection/Index">Collection Registry</a>
+                    <a asp-page="/Collection/Create">Add Record</a>
+                    <a asp-page="/Categories/Index">Categories</a>
+                    <a asp-page="/Staff/Analytics">Market Intelligence</a>
+                }
+                else
+                {
+                    <a asp-page="/Collection/Index">My Collection</a>
+                    <a asp-page="/Collection/Create">Add Item</a>
+                }
+                <span class="nav-divider"></span>
+                <span class="nav-user">@User.Identity.Name</span>
+                <form method="post" asp-page="/Account/Logout"><button class="text-button" type="submit">Log out</button></form>
+            }
+            else
+            {
+                <a asp-page="/Account/Login">Log in</a>
+                <a class="button button-small" asp-page="/Account/Register">Join the vault</a>
+            }
+        </nav>
+    </header>
+    @if (TempData["Success"] is string success) { <div class="toast success">@success</div> }
+    <main>@RenderBody()</main>
+    <footer>
+        <div><img class="footer-logo" src="~/images/arcane-vault-logo-white.webp" alt="Arcane Vault" /><p>Collection management and market intelligence.</p></div>
+        <div><span>Prototype · IT2814</span><span>© 2026 Arcane Vault</span></div>
+    </footer>
+    @if (User.Identity?.IsAuthenticated == true && !User.IsInRole("Staff"))
+    {
+        <form method="post" hidden>@Html.AntiForgeryToken()</form>
+        <partial name="_VaultAssistant" />
+    }
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/vault-assistant.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

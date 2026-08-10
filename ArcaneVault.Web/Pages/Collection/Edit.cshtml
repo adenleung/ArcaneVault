@@ -1,0 +1,7 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page "{id:int}"
+@model EditModel
+@{ ViewData["Title"] = "Edit collectible"; }
+<section class="page-hero compact page-shell"><div><a class="back-link" asp-page="Details" asp-route-id="@Model.Id">← Item details</a><p class="eyebrow">EDIT RECORD</p><h1>Refine the details.</h1><p>Keep the collection record accurate and current.</p></div></section>
+<form method="post" class="editor-form page-shell"><input type="hidden" asp-for="Id" /><partial name="_ItemForm" model="Model" /><div class="form-actions"><a class="button button-light" asp-page="Details" asp-route-id="@Model.Id">Cancel</a><button class="button" type="submit">Save changes</button></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

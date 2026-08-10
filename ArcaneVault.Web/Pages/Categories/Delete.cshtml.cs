@@ -1,0 +1,4 @@
+/* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 */
+using ArcaneVault.Web.Models;using ArcaneVault.Web.Services;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;
+namespace ArcaneVault.Web.Pages.Categories;
+public class DeleteCategoryModel(ApiClient api):PageModel{[BindProperty]public string Code{get;set;}="";public CategoryDto?Category{get;set;}public async Task<IActionResult>OnGetAsync(string code){Code=code;Category=await api.GetAsync<CategoryDto>($"api/categories/{code}");return Category is null?NotFound():Page();}public async Task<IActionResult>OnPostAsync(){try{await api.DeleteAsync($"api/categories/{Code}");TempData["Success"]="Category deleted.";return RedirectToPage("Index");}catch(ApiException ex){ModelState.AddModelError("",ex.Message);Category=await api.GetAsync<CategoryDto>($"api/categories/{Code}");return Page();}}}

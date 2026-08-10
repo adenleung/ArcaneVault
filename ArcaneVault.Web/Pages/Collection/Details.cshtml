@@ -1,0 +1,14 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page "{id:int}"
+@model DetailsModel
+@{ ViewData["Title"] = Model.Item?.ItemName ?? "Item"; }
+@if (Model.Item is not null)
+{
+<section class="product-detail page-shell">
+    <div class="detail-image"><img src="@Model.Item.ImageUrl" alt="@Model.Item.ItemName" onerror="this.src='/images/products/placeholder.webp'" /></div>
+    <div class="detail-copy"><a class="back-link" asp-page="Index">← Collection</a><span class="category-label">@Model.Item.CategoryName</span><h1>@Model.Item.ItemName</h1><p class="detail-price">S$@Model.Item.EstimatedUnitValue.ToString("N2") <span>estimated unit value</span></p><p class="detail-description">@Model.Item.Description</p>
+        <dl class="detail-list"><div><dt>Current quantity</dt><dd>@Model.Item.CurrentQuantity</dd></div><div><dt>Starting quantity</dt><dd>@Model.Item.StartingQuantity</dd></div><div><dt>Date added</dt><dd>@Model.Item.DateAdded.ToString("dd MMM yyyy")</dd></div>@if(User.IsInRole("Staff")){<div><dt>Owner</dt><dd>@Model.Item.UserName</dd></div>}</dl>
+        <div class="button-row"><a class="button" asp-page="Edit" asp-route-id="@Model.Item.ItemId">Edit item</a><a class="button button-danger-light" asp-page="Delete" asp-route-id="@Model.Item.ItemId">Remove</a></div>
+    </div>
+</section>
+}

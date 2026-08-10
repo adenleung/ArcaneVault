@@ -1,0 +1,5 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page "{code}"
+@model CategoryDetailsModel
+@{ ViewData["Title"]="Category details"; }
+@if(Model.Category is not null){<section class="narrow-page page-shell"><a class="back-link" asp-page="Index">← Categories</a><p class="eyebrow">CATEGORY RECORD</p><h1>@Model.Category.CategoryName</h1><div class="record-card"><div><span>Category code</span><strong>@Model.Category.CategoryCode</strong></div><div><span>Active items</span><strong>@Model.Category.ItemCount</strong></div></div><div class="button-row"><a class="button" asp-page="Edit" asp-route-code="@Model.Category.CategoryCode">Edit category</a><a class="button button-light" asp-page="Index">Back to list</a></div></section>}

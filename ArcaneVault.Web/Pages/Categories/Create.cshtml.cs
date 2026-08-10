@@ -1,0 +1,4 @@
+/* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 */
+using System.ComponentModel.DataAnnotations; using ArcaneVault.Web.Models; using ArcaneVault.Web.Services; using Microsoft.AspNetCore.Mvc; using Microsoft.AspNetCore.Mvc.RazorPages;
+namespace ArcaneVault.Web.Pages.Categories;
+public class CreateCategoryModel(ApiClient api):PageModel { [BindProperty] public CategoryInput Input{get;set;}=new(); public class CategoryInput{[Required,RegularExpression("^[A-Za-z0-9_-]{2,12}$"),Display(Name="Category code")]public string CategoryCode{get;set;}="";[Required,StringLength(60),Display(Name="Category name")]public string CategoryName{get;set;}="";} public async Task<IActionResult> OnPostAsync(){if(!ModelState.IsValid)return Page();try{await api.PostAsync<CategoryDto>("api/categories",Input);TempData["Success"]="Category created.";return RedirectToPage("Index");}catch(ApiException ex){ModelState.AddModelError("",ex.Message);return Page();}} }

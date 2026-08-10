@@ -1,0 +1,18 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model RegisterModel
+@{ ViewData["Title"] = "Create account"; }
+<section class="auth-layout">
+    <div class="auth-art register-art"><img src="~/images/auth-vault.webp" alt="Original collectible display" /><div><p class="eyebrow">MAKE IT YOURS</p><h2>Your collection starts here.</h2></div></div>
+    <div class="auth-panel"><div class="form-wrap"><p class="eyebrow">JOIN THE VAULT</p><h1>Create your account.</h1><p class="muted">A personal space for every piece you collect.</p>
+        <form method="post" class="stack-form">
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            <label asp-for="Input.UserName"></label><input asp-for="Input.UserName" autocomplete="username" placeholder="aden" /><span asp-validation-for="Input.UserName"></span>
+            <label asp-for="Input.Email"></label><input asp-for="Input.Email" autocomplete="email" placeholder="you@example.com" /><span asp-validation-for="Input.Email"></span>
+            <label asp-for="Input.Password"></label><input asp-for="Input.Password" autocomplete="new-password" /><span asp-validation-for="Input.Password"></span>
+            <label asp-for="Input.ConfirmPassword"></label><input asp-for="Input.ConfirmPassword" autocomplete="new-password" /><span asp-validation-for="Input.ConfirmPassword"></span>
+            <button class="button full" type="submit">Create account</button>
+        </form><p class="form-foot">Already have an account? <a asp-page="Login">Log in</a></p>
+    </div></div>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

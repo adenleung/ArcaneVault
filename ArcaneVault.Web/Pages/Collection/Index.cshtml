@@ -1,0 +1,47 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model CollectionIndexModel
+@{ ViewData["Title"] = "My Collection"; }
+<section class="page-hero compact page-shell">
+    <div><p class="eyebrow">PERSONAL VAULT</p><h1>@(User.IsInRole("Staff") ? "Collection registry" : "My collection")</h1><p>@Model.Items.Count collectible records · S$@Model.Items.Sum(x => x.CurrentQuantity * x.EstimatedUnitValue).ToString("N0") estimated value</p></div>
+    <a class="button" asp-page="Create">Add collectible</a>
+</section>
+<section class="customer-metrics page-shell" aria-label="Collection summary">
+    <article><strong>@Model.Items.Count</strong><span>Collectibles</span></article>
+    <article><strong>S$@Model.Items.Sum(x => x.CurrentQuantity * x.EstimatedUnitValue).ToString("N0")</strong><span>Estimated value</span></article>
+    <article><strong>@Model.CategoryCount</strong><span>Categories</span></article>
+    <article><strong>@Model.AddedThisMonth</strong><span>Added this month</span></article>
+</section>
+<section class="toolbar page-shell">
+    <form method="get" class="search-form">
+        <label class="search-field"><span>Search</span><input name="Query" value="@Model.Query" placeholder="Search name, category, value, owner or quantity" /></label>
+        <label><span>Category</span><select name="Category"><option value="">All categories</option>@foreach (var category in Model.Categories) { <option value="@category.CategoryCode" selected="@(Model.Category == category.CategoryCode ? "selected" : null)">@category.CategoryName</option> }</select></label>
+        <label><span>Sort</span><select name="Sort"><option value="recent" selected="@(Model.Sort == "recent" ? "selected" : null)">Recently added</option><option value="name" selected="@(Model.Sort == "name" ? "selected" : null)">Name A-Z</option><option value="value-high" selected="@(Model.Sort == "value-high" ? "selected" : null)">Highest value</option><option value="value-low" selected="@(Model.Sort == "value-low" ? "selected" : null)">Lowest value</option><option value="quantity" selected="@(Model.Sort == "quantity" ? "selected" : null)">Highest quantity</option></select></label>
+        <label><span>View</span><select name="View"><option value="grid" selected="@(Model.ViewMode == "grid" ? "selected" : null)">Grid</option><option value="list" selected="@(Model.ViewMode == "list" ? "selected" : null)">List</option></select></label>
+        <button class="button button-light" type="submit">Apply</button>
+        @if (!string.IsNullOrWhiteSpace(Model.Query) || !string.IsNullOrWhiteSpace(Model.Category)) { <a class="text-link" asp-page="Index">Reset</a> }
+    </form>
+</section>
+<section class="page-shell collection-section">
+    @if (Model.Items.Count == 0)
+    {
+        <div class="empty-state"><p class="eyebrow">@(string.IsNullOrWhiteSpace(Model.Query) && string.IsNullOrWhiteSpace(Model.Category) ? "EMPTY VAULT" : "NO RESULTS")</p><h2>@(string.IsNullOrWhiteSpace(Model.Query) && string.IsNullOrWhiteSpace(Model.Category) ? "Your vault is waiting." : "Nothing matches those filters.")</h2><p>@(string.IsNullOrWhiteSpace(Model.Query) && string.IsNullOrWhiteSpace(Model.Category) ? "Add your first collectible to begin building your personal collection." : "Try a different search term or reset the current filters.")</p>@if(string.IsNullOrWhiteSpace(Model.Query) && string.IsNullOrWhiteSpace(Model.Category)){<a class="button" asp-page="Create">Add first item</a>}else{<a class="button button-light" asp-page="Index">Reset filters</a>}</div>
+    }
+    else
+    {
+        <div class="product-grid @(Model.ViewMode == "list" ? "product-list" : "")">
+        @foreach (var item in Model.Items)
+        {
+            <article class="product-card">
+                <a class="product-image" asp-page="Details" asp-route-id="@item.ItemId"><img src="@item.ImageUrl" alt="@item.ItemName" onerror="this.src='/images/products/placeholder.webp'" /><span class="view-cue">View item</span></a>
+                <div class="product-meta">
+                    <div><span class="category-label">@item.CategoryName</span><h2><a asp-page="Details" asp-route-id="@item.ItemId">@item.ItemName</a></h2></div>
+                    <strong>S$@item.EstimatedUnitValue.ToString("N0")</strong>
+                </div>
+                <div class="product-sub"><span>Qty @item.CurrentQuantity</span>@if (User.IsInRole("Staff")) { <span>Owner: @item.UserName</span> }</div>
+                <div class="product-actions"><a asp-page="Details" asp-route-id="@item.ItemId">View</a><a asp-page="Edit" asp-route-id="@item.ItemId">Edit</a><a class="danger-text" asp-page="Delete" asp-route-id="@item.ItemId">Remove</a></div>
+            </article>
+        }
+        </div>
+    }
+</section>

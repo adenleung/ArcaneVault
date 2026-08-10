@@ -1,0 +1,13 @@
+<aside class="vault-assistant" data-vault-assistant>
+    <button class="assistant-launcher" type="button" data-assistant-toggle aria-expanded="false"><span>✦</span><strong>Ask Arcane</strong></button>
+    <section class="assistant-panel" data-assistant-panel hidden aria-label="Vault Assistant">
+        <header><div><span class="ai-kicker">VAULT ASSISTANT</span><h2>Your collection, explained.</h2></div><button type="button" data-assistant-close aria-label="Close assistant">×</button></header>
+        <div class="assistant-notice">A limited summary of your signed-in collection is sent to the AI provider to answer each question. Estimated values are user-entered, not live market prices.</div>
+        <div class="assistant-messages" data-assistant-messages aria-live="polite"><div class="assistant-message bot">What would you like to know about your collection?</div></div>
+        <div class="assistant-suggestions">
+            <button type="button">Summarise my collection</button><button type="button">What is my largest category?</button>
+            <button type="button">Show my recent items</button><button type="button">Explain estimated value</button>
+        </div>
+        <form data-assistant-form><input name="question" maxlength="500" placeholder="Ask about your collection…" autocomplete="off" /><button type="submit" aria-label="Send">Send</button></form>
+    </section>
+</aside>

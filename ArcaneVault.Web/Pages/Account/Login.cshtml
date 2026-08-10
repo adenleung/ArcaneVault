@@ -1,0 +1,18 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model LoginModel
+@{ ViewData["Title"] = "Log in"; }
+<section class="auth-layout">
+    <div class="auth-art"><img src="~/images/auth-vault.webp" alt="Original collectible display" /><div><p class="eyebrow">ARCANE VAULT</p><h2>Everything worth keeping deserves a place.</h2></div></div>
+    <div class="auth-panel"><div class="form-wrap"><p class="eyebrow">WELCOME BACK</p><h1>Enter your vault.</h1><p class="muted">Use your email and password to continue.</p>
+        <form method="post" class="stack-form">
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            <label asp-for="Input.Email"></label><input asp-for="Input.Email" autocomplete="email" placeholder="you@example.com" /><span asp-validation-for="Input.Email"></span>
+            <label asp-for="Input.Password"></label><input asp-for="Input.Password" autocomplete="current-password" /><span asp-validation-for="Input.Password"></span>
+            <button class="button full" type="submit">Log in</button>
+        </form>
+        <p class="form-foot">New to Arcane Vault? <a asp-page="Register">Create an account</a></p>
+        <div class="demo-credentials"><strong>Demo access</strong><span>Staff: staff@arcanevault.test / Staff123!</span><span>User: aden@arcanevault.test / Aden123!</span></div>
+    </div></div>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

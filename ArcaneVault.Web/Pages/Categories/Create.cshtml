@@ -1,0 +1,6 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model CreateCategoryModel
+@{ ViewData["Title"]="Create category"; }
+<section class="narrow-page page-shell"><a class="back-link" asp-page="Index">← Categories</a><p class="eyebrow">NEW MASTER RECORD</p><h1>Create category.</h1><p class="muted">Use a short, memorable code and a clear category name.</p><form method="post" class="stack-form form-card"><div asp-validation-summary="ModelOnly" class="validation-summary"></div><label asp-for="Input.CategoryCode"></label><input asp-for="Input.CategoryCode" placeholder="e.g. CARD" /><span asp-validation-for="Input.CategoryCode"></span><label asp-for="Input.CategoryName"></label><input asp-for="Input.CategoryName" placeholder="e.g. Trading Cards" /><span asp-validation-for="Input.CategoryName"></span><div class="form-actions"><a class="button button-light" asp-page="Index">Cancel</a><button class="button" type="submit">Create category</button></div></form></section>
+@section Scripts{<partial name="_ValidationScriptsPartial"/>}

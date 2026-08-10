@@ -1,0 +1,8 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page "{id:int}"
+@model DeleteModel
+@{ ViewData["Title"] = "Remove collectible"; }
+@if (Model.Item is not null)
+{
+<section class="confirm-layout page-shell"><div class="confirm-image"><img src="@Model.Item.ImageUrl" alt="@Model.Item.ItemName" onerror="this.src='/images/products/placeholder.webp'" /></div><div><p class="eyebrow danger-text">REMOVE RECORD</p><h1>Remove @Model.Item.ItemName?</h1><p>This hides the item from your active collection. Historical acquisition data remains available for accurate reporting.</p><form method="post"><input type="hidden" asp-for="Id" /><div class="button-row"><a class="button button-light" asp-page="Details" asp-route-id="@Model.Id">Keep item</a><button class="button button-danger" type="submit">Confirm removal</button></div></form></div></section>
+}

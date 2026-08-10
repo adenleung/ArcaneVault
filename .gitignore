@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+ArcaneVault.db-shm
+ArcaneVault.db-wal
+.env
+.env.local
+ArcaneVault.Web/wwwroot/uploads/

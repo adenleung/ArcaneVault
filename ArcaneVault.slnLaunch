@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Arcane Vault - Web and API",
+    "Projects": [
+      {
+        "Path": "ArcaneVault.Api\\ArcaneVault.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ArcaneVault.Web\\ArcaneVault.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

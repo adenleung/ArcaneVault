@@ -1,0 +1,29 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@model ArcaneVault.Web.Pages.Collection.ItemFormPageModel
+<div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+<section class="form-section"><div class="form-section-title"><span>01</span><div><h2>Basic information</h2><p>Give the collectible a clear identity.</p></div></div><div class="form-fields">
+    <label asp-for="Input.ItemName"></label><input asp-for="Input.ItemName" placeholder="e.g. Apex High 'Shadow'" /><span asp-validation-for="Input.ItemName"></span>
+    <label asp-for="Input.Description"></label><textarea asp-for="Input.Description" rows="5" placeholder="Edition, year, rarity and any identifying details"></textarea><span asp-validation-for="Input.Description"></span>
+    <label asp-for="Input.CategoryCode"></label><select asp-for="Input.CategoryCode"><option value="">Choose a category</option>@foreach (CategoryDto category in Model.Categories) { <option value="@category.CategoryCode">@category.CategoryName</option> }</select><span asp-validation-for="Input.CategoryCode"></span>
+</div></section>
+<section class="form-section"><div class="form-section-title"><span>02</span><div><h2>Collection details</h2><p>Record quantity and estimated market value.</p></div></div><div class="form-fields two-column">
+    <div><label asp-for="Input.StartingQuantity"></label><input asp-for="Input.StartingQuantity" /></div>
+    <div><label asp-for="Input.CurrentQuantity"></label><input asp-for="Input.CurrentQuantity" /></div>
+    <div class="span-two"><label asp-for="Input.EstimatedUnitValue"></label><input asp-for="Input.EstimatedUnitValue" step="0.01" /></div>
+</div></section>
+@if (!Model.IsEdit)
+{
+<section class="form-section"><div class="form-section-title"><span>03</span><div><h2>Acquisition record</h2><p>This anonymised activity supports staff market analysis.</p></div></div><div class="form-fields two-column">
+    <div><label asp-for="Input.PurchasePrice"></label><input asp-for="Input.PurchasePrice" step="0.01" /></div>
+    <div><label asp-for="Input.PurchaseDate"></label><input asp-for="Input.PurchaseDate" /></div>
+    <div><label asp-for="Input.PurchaseSource"></label><select asp-for="Input.PurchaseSource"><option>Retail store</option><option>Online marketplace</option><option>Convention</option><option>Trade</option><option>Gift</option></select></div>
+    <div><label asp-for="Input.Condition"></label><select asp-for="Input.Condition"><option>New</option><option>Pre-owned</option><option>Sealed</option><option>Graded</option></select></div>
+</div></section>
+}
+<section class="form-section"><div class="form-section-title"><span>@(Model.IsEdit ? "03" : "04")</span><div><h2>Product image</h2><p>Choose a built-in image or enter your own URL.</p></div></div><div class="form-fields">
+    <label asp-for="Input.ImageUrl"></label><input asp-for="Input.ImageUrl" data-image-url />
+    <div class="image-picker" data-image-picker>
+        @foreach (var image in new[]{"apex-high","solar-dragon","mono-runner","vault-guardian","atlas-watch","neon-circuit","pixel-core","lunar-ace"})
+        { <button type="button" data-image="/images/products/@(image).webp"><img src="/images/products/@(image).webp" alt="Choose @image image" /></button> }
+    </div>
+</div></section>

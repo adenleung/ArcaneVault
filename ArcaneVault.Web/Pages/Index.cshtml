@@ -1,0 +1,31 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model IndexModel
+@{ ViewData["Title"] = "Collect what moves you"; }
+<section class="hero">
+    <div class="hero-copy">
+        <p class="eyebrow">COLLECTION MANAGEMENT, REIMAGINED</p>
+        <h1>YOUR COLLECTION.<br />YOUR STORY.</h1>
+        <p class="hero-lead">Build, organise and understand every collectible in one beautifully simple vault.</p>
+        <div class="button-row">
+            @if (User.Identity?.IsAuthenticated == true)
+            { <a class="button" asp-page="/Collection/Index">Explore collection</a><a class="button button-light" asp-page="/Collection/Create">Add collectible</a> }
+            else
+            { <a class="button" asp-page="/Account/Register">Start your vault</a><a class="button button-light" asp-page="/Account/Login">Log in</a> }
+        </div>
+    </div>
+    <div class="hero-art"><img src="~/images/hero-vault.webp" alt="Curated collection of original collectibles" /></div>
+</section>
+<section class="statement page-shell"><p>ONE VAULT. EVERY OBSESSION.</p><h2>Keep the pieces that define your world organised, visible and understood.</h2></section>
+<section class="category-editorial page-shell">
+    <div class="section-heading"><div><p class="eyebrow">EXPLORE THE VAULT</p><h2>Built for every collection.</h2></div></div>
+    <div class="editorial-grid">
+        <article class="editorial-card with-image"><img src="~/images/products/apex-high.webp" alt="Original high-top sneaker collectible" /><span>01</span><h3>Sneakers</h3><p>Track every silhouette, release and colourway.</p></article>
+        <article class="editorial-card with-image"><img src="~/images/products/solar-dragon.webp" alt="Original fantasy trading card collectible" /><span>02</span><h3>Trading Cards</h3><p>Catalogue rarity, condition and recorded value.</p></article>
+        <article class="editorial-card with-image"><img src="~/images/products/vault-guardian.webp" alt="Original designer figure collectible" /><span>03</span><h3>Design Objects</h3><p>Give every limited piece its proper place.</p></article>
+    </div>
+</section>
+<section class="feature-banner">
+    <div><p class="eyebrow">MARKET INTELLIGENCE</p><h2>See what collectors are choosing.</h2><p>Staff analytics reveal category demand, acquisition value, popular items and changing activity over time.</p></div>
+    @if (User.IsInRole("Staff")) { <a class="button button-light" asp-page="/Staff/Analytics">Open intelligence</a> }
+</section>

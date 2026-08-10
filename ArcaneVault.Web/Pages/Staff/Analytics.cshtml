@@ -1,0 +1,72 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model AnalyticsModel
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Market Intelligence";
+    var json = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    var activeCategory = Model.Categories.FirstOrDefault(c => c.CategoryCode == Model.Category)?.CategoryName ?? "All categories";
+    var activeSource = string.IsNullOrWhiteSpace(Model.Source) ? "All sources" : Model.Source;
+    var activeProduct = string.IsNullOrWhiteSpace(Model.Product) ? "All products" : Model.Product;
+}
+<section class="analytics-shell page-shell">
+    <header class="analytics-heading"><div><p class="eyebrow">STAFF · ACQUISITION ANALYTICS</p><h1>Market intelligence.</h1><p>Understand recorded demand, value and collector activity across the Arcane Vault prototype.</p></div><div class="status-chip">Prototype database analysis</div></header>
+    <div class="data-provenance"><strong>Data source:</strong> The initial dashboard records are seeded demonstration data. New acquisitions entered by users are calculated from the database in the same way; none of these figures are verified marketplace transactions.</div>
+    <div class="analytics-definitions" aria-label="Analytics value definitions">
+        <span><strong>Acquisition value:</strong> recorded amount paid.</span>
+        <span><strong>Estimated value:</strong> current quantity × current user-entered unit valuation.</span>
+        <span><strong>Important:</strong> not verified market data.</span>
+    </div>
+    @if(Model.HasLoadWarning){<div class="analytics-warning" role="status"><strong>Some analytics could not be loaded.</strong> Available results are shown below; unavailable charts display “No data available.” Check the API Output window for the affected endpoint.</div>}
+    <form method="get" class="analytics-filters">
+        <label><span>From</span><input type="date" name="From" value="@Model.From.ToString("yyyy-MM-dd")" /></label>
+        <label><span>To</span><input type="date" name="To" value="@Model.To.ToString("yyyy-MM-dd")" /></label>
+        <label><span>Category</span><select name="Category"><option value="">All categories</option>@foreach(var c in Model.Categories){<option value="@c.CategoryCode" selected="@(Model.Category==c.CategoryCode ? "selected" : null)">@c.CategoryName</option>}</select></label>
+        <label><span>Source</span><select name="Source"><option value="">All sources</option>@foreach(var s in new[]{"Retail store","Online marketplace","Convention","Trade","Gift"}){<option value="@s" selected="@(Model.Source==s ? "selected" : null)">@s</option>}</select></label>
+        <button class="button" type="submit">Update analysis</button><a class="text-link" asp-page="Analytics">Reset</a>
+    </form>
+    <p class="active-filters"><strong>Active filters:</strong> @Model.From.ToString("dd MMM yyyy")–@Model.To.ToString("dd MMM yyyy") · @activeCategory · @activeSource · @activeProduct</p>
+    @if(Model.Summary is not null){
+    <div class="kpi-toolbar"><div><strong>Dashboard summary</strong><span>Choose up to four cards. Your selection is saved on this browser.</span></div><button type="button" class="button button-light button-small" data-kpi-toggle>Customise cards</button></div>
+    <div class="kpi-picker" data-kpi-picker hidden>
+        <p>Select between one and four summary cards.</p>
+        <div class="kpi-options">
+            <label><input type="checkbox" value="estimated"/> Estimated collection value</label><label><input type="checkbox" value="recorded"/> Recorded acquisition value</label>
+            <label><input type="checkbox" value="quantity"/> Items acquired</label><label><input type="checkbox" value="collectors"/> Active collectors</label>
+            <label><input type="checkbox" value="average"/> Average unit price</label><label><input type="checkbox" value="events"/> Acquisition events</label>
+            <label><input type="checkbox" value="categories"/> Categories represented</label><label><input type="checkbox" value="sourceShare"/> Leading source share</label>
+        </div><div class="kpi-picker-actions"><span data-kpi-message></span><button type="button" class="button button-small" data-kpi-apply>Apply cards</button><button type="button" class="text-link kpi-reset" data-kpi-reset>Reset defaults</button></div>
+    </div>
+    <div class="metric-grid" data-kpi-grid>
+        <article data-kpi-card="estimated"><div><span>Estimated value of matching items</span><strong>S$@Model.Summary.EstimatedCollectionValue.Value.ToString("N0")</strong><small>Distinct matching items: current quantity × current estimated unit value.</small></div>@if(Model.Summary.EstimatedCollectionValue.HasPrevious){<em class="@(Model.Summary.EstimatedCollectionValue.Change>=0?"up":"down")">@(Model.Summary.EstimatedCollectionValue.Change>=0?"+":"")@Model.Summary.EstimatedCollectionValue.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+        <article data-kpi-card="recorded"><div><span>Recorded acquisition value</span><strong>S$@Model.Summary.RecordedValue.Value.ToString("N0")</strong><small>Sum of purchase unit price × acquired quantity.</small></div>@if(Model.Summary.RecordedValue.HasPrevious){<em class="@(Model.Summary.RecordedValue.Change>=0?"up":"down")">@(Model.Summary.RecordedValue.Change>=0?"+":"")@Model.Summary.RecordedValue.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+        <article data-kpi-card="quantity"><div><span>Items acquired</span><strong>@Model.Summary.ItemsAcquired.Value.ToString("N0")</strong><small>Sum of quantities in matching acquisition records.</small></div>@if(Model.Summary.ItemsAcquired.HasPrevious){<em class="@(Model.Summary.ItemsAcquired.Change>=0?"up":"down")">@(Model.Summary.ItemsAcquired.Change>=0?"+":"")@Model.Summary.ItemsAcquired.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+        <article data-kpi-card="collectors"><div><span>Active collectors</span><strong>@Model.Summary.ActiveUsers.Value.ToString("N0")</strong><small>Distinct users with a matching acquisition record.</small></div>@if(Model.Summary.ActiveUsers.HasPrevious){<em class="@(Model.Summary.ActiveUsers.Change>=0?"up":"down")">@(Model.Summary.ActiveUsers.Change>=0?"+":"")@Model.Summary.ActiveUsers.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+        <article data-kpi-card="average" hidden><div><span>Average unit price</span><strong>S$@Model.Summary.AveragePrice.Value.ToString("N2")</strong><small>Recorded acquisition value ÷ acquired quantity.</small></div>@if(Model.Summary.AveragePrice.HasPrevious){<em class="@(Model.Summary.AveragePrice.Change>=0?"up":"down")">@(Model.Summary.AveragePrice.Change>=0?"+":"")@Model.Summary.AveragePrice.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+        <article data-kpi-card="events" hidden><div><span>Acquisition events</span><strong>@Model.Summary.AcquisitionEvents.Value.ToString("N0")</strong><small>Count of matching acquisition records.</small></div>@if(Model.Summary.AcquisitionEvents.HasPrevious){<em class="@(Model.Summary.AcquisitionEvents.Change>=0?"up":"down")">@(Model.Summary.AcquisitionEvents.Change>=0?"+":"")@Model.Summary.AcquisitionEvents.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+        <article data-kpi-card="categories" hidden><div><span>Categories represented</span><strong>@Model.Summary.CategoriesRepresented.Value.ToString("N0")</strong><small>Distinct categories among matching items.</small></div>@if(Model.Summary.CategoriesRepresented.HasPrevious){<em class="@(Model.Summary.CategoriesRepresented.Change>=0?"up":"down")">@(Model.Summary.CategoriesRepresented.Change>=0?"+":"")@Model.Summary.CategoriesRepresented.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+        <article data-kpi-card="sourceShare" hidden><div><span>Leading source share</span><strong>@Model.Summary.LeadingSourceShare.Value.ToString("N0")%</strong><small>Largest source event count ÷ all matching events.</small></div>@if(Model.Summary.LeadingSourceShare.HasPrevious){<em class="@(Model.Summary.LeadingSourceShare.Change>=0?"up":"down")">@(Model.Summary.LeadingSourceShare.Change>=0?"+":"")@Model.Summary.LeadingSourceShare.Change% vs prior period</em>}else{<em class="neutral-change">No comparable prior data</em>}</article>
+    </div>}
+    <form method="get" class="chart-controls" data-chart-controls>
+        <input type="hidden" name="From" value="@Model.From.ToString("yyyy-MM-dd")" /><input type="hidden" name="To" value="@Model.To.ToString("yyyy-MM-dd")" /><input type="hidden" name="Category" value="@Model.Category" /><input type="hidden" name="Source" value="@Model.Source" />
+        <fieldset><legend>Time grouping</legend><div class="segment-control">@foreach(var group in new[]{"day","week","month","quarter","year"}){<label><input type="radio" name="GroupBy" value="@group" checked="@(Model.GroupBy==group?"checked":null)"/><span>@(char.ToUpper(group[0]))@(group[1..])</span></label>}</div></fieldset>
+        <label><span>Metric</span><select name="Metric"><option value="value" selected="@(Model.Metric=="value"?"selected":null)">Acquisition value</option><option value="quantity" selected="@(Model.Metric=="quantity"?"selected":null)">Items acquired</option><option value="estimated" selected="@(Model.Metric=="estimated"?"selected":null)">Estimated value of matching items</option></select></label>
+        <label><span>Product</span><select name="Product"><option value="">All products</option>@foreach(var product in Model.Products){<option value="@product" selected="@(Model.Product==product?"selected":null)">@product</option>}</select></label>
+        <fieldset><legend>Chart type</legend><div class="segment-control"><label><input type="radio" name="ChartType" value="line" checked="@(Model.ChartType=="line"?"checked":null)"/><span>Line</span></label><label><input type="radio" name="ChartType" value="bars" checked="@(Model.ChartType=="bars"?"checked":null)"/><span>Bars</span></label></div></fieldset>
+        <label class="compare-control"><input type="checkbox" name="ComparePrevious" value="true" checked="@(Model.ComparePrevious?"checked":null)"/><span>Compare prior period</span></label>
+        <button class="button button-small" type="submit">Apply chart</button>
+    </form>
+    <div class="chart-grid">
+        <article class="chart-card wide"><div class="chart-title"><div><p class="eyebrow">VALUE & VOLUME</p><h2>Acquisition activity over time</h2></div><span>S$ value + item quantity</span></div><div id="trend-chart" class="chart"></div></article>
+        <article class="chart-card"><div class="chart-title"><div><p class="eyebrow">DEMAND MIX</p><h2>Category share</h2></div><span>By quantity</span></div><div id="category-chart" class="chart"></div></article>
+        <article class="chart-card"><div class="chart-title"><div><p class="eyebrow">CHANNELS</p><h2>Acquisition sources</h2></div><span>Recorded events</span></div><div id="source-chart" class="chart"></div></article>
+        <article class="chart-card wide"><div class="chart-title"><div><p class="eyebrow">TOP ITEMS</p><h2>Most acquired collectibles</h2></div><span>Quantity and recorded value</span></div><div id="items-chart" class="chart"></div></article>
+    </div>
+    <section class="insight-section"><div class="section-heading"><div><p class="eyebrow">CALCULATED DATABASE INSIGHTS</p><h2>Signals worth watching.</h2></div><p>Transparent database rules rank observations using concentration, value differences and period activity. The three highest-priority results are shown; no external AI service is used.</p></div><div class="insight-grid">@if(Model.Insights.Count==0){<div class="empty-insight"><strong>No records match these filters.</strong><p>Reset the filters or choose a wider date range.</p><a class="button button-small" asp-page="Analytics">Reset filters</a></div>}@foreach(var insight in Model.Insights){<article class="insight-@insight.Tone"><span class="signal-dot @insight.Tone"></span><h3>@insight.Title</h3><p>@insight.Detail</p></article>}</div></section>
+    <p class="analytics-note">Recorded purchase values are user-entered prototype data and should be interpreted as directional signals, not verified marketplace transactions.</p>
+</section>
+@section Scripts{
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script>window.arcaneAnalytics={trend:@Html.Raw(JsonSerializer.Serialize(Model.Trend,json)),categories:@Html.Raw(JsonSerializer.Serialize(Model.CategoryShare,json)),sources:@Html.Raw(JsonSerializer.Serialize(Model.Sources,json)),items:@Html.Raw(JsonSerializer.Serialize(Model.TopItems,json)),metric:"@Model.Metric",chartType:"@Model.ChartType",compare:@Model.ComparePrevious.ToString().ToLowerInvariant()};</script>
+<script src="~/js/analytics.js" asp-append-version="true"></script>
+}

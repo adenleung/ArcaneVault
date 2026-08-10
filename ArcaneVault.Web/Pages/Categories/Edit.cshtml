@@ -1,0 +1,6 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page "{code}"
+@model EditCategoryModel
+@{ ViewData["Title"]="Edit category"; }
+<section class="narrow-page page-shell"><a class="back-link" asp-page="Details" asp-route-code="@Model.Code">← Category details</a><p class="eyebrow">EDIT MASTER RECORD</p><h1>Edit category.</h1><form method="post" class="stack-form form-card"><input type="hidden" asp-for="Code"/><div asp-validation-summary="ModelOnly" class="validation-summary"></div><label>Category code</label><input value="@Model.Code" disabled/><small>Codes are permanent to protect existing relationships.</small><label asp-for="CategoryName"></label><input asp-for="CategoryName"/><span asp-validation-for="CategoryName"></span><div class="form-actions"><a class="button button-light" asp-page="Details" asp-route-code="@Model.Code">Cancel</a><button class="button" type="submit">Save changes</button></div></form></section>
+@section Scripts{<partial name="_ValidationScriptsPartial"/>}

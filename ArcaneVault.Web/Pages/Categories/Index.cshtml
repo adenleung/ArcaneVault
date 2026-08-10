@@ -1,0 +1,6 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model CategoriesIndexModel
+@{ ViewData["Title"] = "Category management"; }
+<section class="page-hero compact page-shell"><div><p class="eyebrow">STAFF · MASTER DATA</p><h1>Category management.</h1><p>Maintain a precise, consistent system for every collectible in the vault.</p></div><a class="button" asp-page="Create">Create category</a></section>
+<section class="page-shell table-card"><div class="table-header"><span>@Model.Categories.Count supported categories</span><span>Protected staff area</span></div><div class="responsive-table"><table><thead><tr><th>Code</th><th>Category name</th><th>Active items</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>@foreach(var category in Model.Categories){<tr><td><span class="code-chip">@category.CategoryCode</span></td><td><strong>@category.CategoryName</strong></td><td>@category.ItemCount</td><td class="actions"><a asp-page="Details" asp-route-code="@category.CategoryCode">View</a><a asp-page="Edit" asp-route-code="@category.CategoryCode">Edit</a><a class="danger-text" asp-page="Delete" asp-route-code="@category.CategoryCode">Delete</a></td></tr>}</tbody></table></div></section>

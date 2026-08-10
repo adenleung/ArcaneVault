@@ -1,0 +1,17 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page
+@model CreateModel
+@{ ViewData["Title"] = "Add collectible"; }
+<section class="page-hero compact page-shell"><div><a class="back-link" asp-page="Index">← Collection</a><p class="eyebrow">NEW RECORD</p><h1>Add a collectible.</h1><p>Capture what makes this piece worth keeping.</p></div></section>
+<section class="smart-add page-shell" data-smart-add>
+    <div class="smart-add-heading"><div><span class="ai-kicker">AI SMART ADD</span><h2>Start with a photo or a name.</h2><p>Arcane identifies visible details, searches the verified catalogue, and fills the form after you confirm.</p></div><span class="ai-status">Review required</span></div>
+    <div class="smart-add-grid">
+        <div class="smart-add-method"><h3>Identify from an image</h3><p>JPEG, PNG or WebP, up to 5 MB. The image is used for identification and is not treated as proof of authenticity.</p><input type="file" id="smartImage" accept="image/jpeg,image/png,image/webp" /><button class="button" type="button" data-identify>Analyse image</button></div>
+        <div class="smart-add-divider"><span>or</span></div>
+        <div class="smart-add-method"><h3>Search the catalogue</h3><p>Use a name, brand, series or reference number.</p><div class="smart-search-row"><input type="search" id="catalogQuery" placeholder="e.g. Solar Dragon 04" /><button class="button button-light" type="button" data-catalog-search>Search</button></div></div>
+    </div>
+    <div class="smart-add-message" data-smart-message hidden></div>
+    <div class="smart-results" data-smart-results hidden></div>
+</section>
+<form method="post" class="editor-form page-shell"><partial name="_ItemForm" model="Model" /><div class="form-actions"><a class="button button-light" asp-page="Index">Cancel</a><button class="button" type="submit">Save collectible</button></div></form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /><script src="~/js/smart-add.js" asp-append-version="true"></script> }

@@ -1,0 +1,5 @@
+@* Name: Aden Leung | Student Admin No.: 252744K | Tutorial Group: IT2814 *@
+@page "{code}"
+@model DeleteCategoryModel
+@{ViewData["Title"]="Delete category";}
+@if(Model.Category is not null){<section class="empty-state page-shell"><p class="eyebrow danger-text">DELETE MASTER RECORD</p><h1>Delete @Model.Category.CategoryName?</h1><p>@if(Model.Category.ItemCount>0){<span>This category is assigned to @Model.Category.ItemCount active items and cannot be deleted until those items are reclassified.</span>}else{<span>This action permanently removes the category.</span>}</p><form method="post"><input type="hidden" asp-for="Code"/><div class="button-row"><a class="button button-light" asp-page="Index">Cancel</a>@if(Model.Category.ItemCount==0){<button class="button button-danger" type="submit">Delete category</button>}</div></form></section>}
